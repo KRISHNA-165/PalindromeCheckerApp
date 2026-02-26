@@ -1,26 +1,24 @@
-import java.util.Queue;
-import java.util.LinkedList;
-import java.util.Stack;
+import java.util.Deque;
+import java.util.ArrayDeque;
 public class PalindromeCheckerApp {
     public static void main(String[] args) {
         String word = "level";
 
-        // Create Queue and Stack
-        Queue<Character> queue = new LinkedList<>();
-        Stack<Character> stack = new Stack<>();
+        Deque<Character> deque = new ArrayDeque<>();
 
-        // Enqueue and push characters
+        // Insert characters into deque
         for (int i = 0; i < word.length(); i++) {
-            char ch = word.charAt(i);
-            queue.add(ch);   // FIFO
-            stack.push(ch);  // LIFO
+            deque.addLast(word.charAt(i));
         }
 
-        // Compare dequeue and pop
+        // Compare front and rear elements
         boolean isPalindrome = true;
 
-        while (!queue.isEmpty()) {
-            if (queue.remove() != stack.pop()) {
+        while (deque.size() > 1) {
+            char front = deque.removeFirst();
+            char rear = deque.removeLast();
+
+            if (front != rear) {
                 isPalindrome = false;
                 break;
             }
@@ -28,7 +26,7 @@ public class PalindromeCheckerApp {
 
         // Display result
         System.out.println("Palindrome Checker App");
-        System.out.println("UC6: Queue + Stack Based Palindrome Check");
+        System.out.println("UC7: Deque-Based Optimized Palindrome Checker");
 
         if (isPalindrome) {
             System.out.println("The word \"" + word + "\" is a palindrome.");
