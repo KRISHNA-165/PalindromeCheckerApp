@@ -1,89 +1,75 @@
-// File: UseCase12PalindromeCheckerApp.java
+// File: UseCase13PalindromeCheckerApp.java
 import java.util.*;
 
-// Step 1: Strategy Interface
-interface PalindromeStrategy {
-    boolean check(String str);
-}
+public class UseCase13PalindromeCheckerApp {
 
-// Step 2: Stack Strategy Implementation
-class StackStrategy implements PalindromeStrategy {
-    public boolean check(String str) {
+    // Two Pointer Method
+    static boolean twoPointerCheck(String str) {
+        int start = 0, end = str.length() - 1;
+        while (start < end) {
+            if (str.charAt(start) != str.charAt(end))
+                return false;
+            start++;
+            end--;
+        }
+        return true;
+    }
+
+    // Stack Method
+    static boolean stackCheck(String str) {
         Stack<Character> stack = new Stack<>();
-
         for (char c : str.toCharArray()) {
             stack.push(c);
         }
-
         for (char c : str.toCharArray()) {
-            if (c != stack.pop()) {
+            if (c != stack.pop())
                 return false;
-            }
         }
         return true;
     }
-}
 
-// Step 2: Deque Strategy Implementation
-class DequeStrategy implements PalindromeStrategy {
-    public boolean check(String str) {
-        Deque<Character> deque = new ArrayDeque<>();
-
-        for (char c : str.toCharArray()) {
-            deque.addLast(c);
-        }
-
-        while (deque.size() > 1) {
-            if (deque.removeFirst() != deque.removeLast()) {
-                return false;
-            }
-        }
-        return true;
-    }
-}
-
-// Context class
-class PalindromeContext {
-    private PalindromeStrategy strategy;
-
-    public PalindromeContext(PalindromeStrategy strategy) {
-        this.strategy = strategy;
+    // Recursive Method
+    static boolean recursiveCheck(String str, int start, int end) {
+        if (start >= end)
+            return true;
+        if (str.charAt(start) != str.charAt(end))
+            return false;
+        return recursiveCheck(str, start + 1, end - 1);
     }
 
-    public boolean execute(String str) {
-        return strategy.check(str);
-    }
-}
-
-// Main Application
-public class PalindromeCheckerApp {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter a string: ");
         String input = scanner.nextLine();
 
-        System.out.println("Choose Strategy: 1. Stack  2. Deque");
-        int choice = scanner.nextInt();
+        // Two Pointer timing
+        long startTime = System.nanoTime();
+        boolean result1 = twoPointerCheck(input);
+        long endTime = System.nanoTime();
+        long time1 = endTime - startTime;
 
-        PalindromeStrategy strategy;
+        // Stack timing
+        startTime = System.nanoTime();
+        boolean result2 = stackCheck(input);
+        endTime = System.nanoTime();
+        long time2 = endTime - startTime;
 
-        if (choice == 1) {
-            strategy = new StackStrategy();
-        } else {
-            strategy = new DequeStrategy();
-        }
+        // Recursive timing
+        startTime = System.nanoTime();
+        boolean result3 = recursiveCheck(input, 0, input.length() - 1);
+        endTime = System.nanoTime();
+        long time3 = endTime - startTime;
 
-        PalindromeContext context = new PalindromeContext(strategy);
-
-        if (context.execute(input)) {
-            System.out.println("Palindrome");
-        } else {
-            System.out.println("Not Palindrome");
-        }
+        // Display Results
+        System.out.println("\nResults:");
+        System.out.println("Two Pointer: " + (result1 ? "Palindrome" : "Not Palindrome") +
+                " | Time: " + time1 + " ns");
+        System.out.println("Stack Method: " + (result2 ? "Palindrome" : "Not Palindrome") +
+                " | Time: " + time2 + " ns");
+        System.out.println("Recursive Method: " + (result3 ? "Palindrome" : "Not Palindrome") +
+                " | Time: " + time3 + " ns");
 
         scanner.close();
     }
 }
-
-
